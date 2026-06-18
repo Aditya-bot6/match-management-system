@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Rollball Match Management System</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <link rel="stylesheet" href="style.css">
+    </head>
+
+    <body>
+        <div id="setupScreen" class="container mt-5">
+            <div class="card shadow">
+                <div class="card-body">
+
+                    <h2 class="text-center mb-4">
+                        Match Setup
+                    </h2>
+
+                    <div class="mb-3">
+                        <label>Team A Name</label>
+                        <input type="text"
+                            id="setupTeamA"
+                            class="form-control"
+                            placeholder="Enter Team A">
+                    </div>
+
+                    <div class="mb-3">
+                        <label>Team B Name</label>
+                        <input type="text"
+                            id="setupTeamB"
+                            class="form-control"
+                            placeholder="Enter Team B">
+                    </div>
+
+                    <div class="text-center mt-4">
+
+                        <div id="coin" class="coin">
+                            ?
+                        </div>
+
+                        <button class="btn btn-primary mt-3"
+                                onclick="tossCoin()">
+                            Toss Coin
+                        </button>
+
+                        <h3 class="mt-3" id="tossResult"></h3>
+
+                    </div>
+
+                    <button class="btn btn-success w-100 mt-4"
+                            onclick="startMatch()">
+                        Start Match
+                    </button>
+
+                </div>
+            </div>
+
+        </div>
+
+        <div class="container-fluid py-4" id="matchScreen" style="display:none;">
+
+            <h1 class="text-center mb-4">
+                Nashik Rollball Match Management System
+            </h1>
+
+            <!-- Scoreboard -->
+
+            <div class="row g-3">
+
+                <!-- Team A -->
+                <div class="col-6 col-lg-4 order-1">
+                    <div class="card bg-dark text-white h-100 shadow">
+                        <div class="card-body text-center">
+
+                            <h2 id="teamAName" class="mb-3">Team A</h2>
+
+                            <div class="display-1 score" id="scoreA">0</div> 
+
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Team B -->
+                <div class="col-6 col-lg-4 order-2 order-lg-3">
+                    <div class="card bg-dark text-white h-100 shadow">
+                        <div class="card-body text-center">
+
+                        <h2 id="teamBName" class="mb-3">Team B</h2>
+
+                            <div class="display-1 score" id="scoreB">0</div>
+
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Timer -->
+                <div class="col-12 col-lg-4 order-3 order-lg-2">
+                    <div class="card bg-dark text-white h-100 shadow">
+                        <div class="card-body text-center">
+
+                            <h4>Match Time (Minutes)</h4>
+
+                            <input
+                                type="number"
+                                id="minutesInput"
+                                class="form-control text-center mb-3"
+                                value="15"
+                                min="1"
+                                onchange="setMatchTime()">
+
+                            <div class="display-3 text-success mb-3"
+                                id="timer">
+                                15:00
+                            </div>
+
+                            <button class="btn btn-success"
+                                    id="startBtn"
+                                    onclick="startTimer()">
+                                Start
+                            </button>
+
+                            <button class="btn btn-primary d-none"
+                                    id="resumeBtn"
+                                    onclick="resumeTimer()">
+                                Resume
+                            </button>
+
+                            <button class="btn btn-warning"
+                                    id="pauseResumeBtn"
+                                    onclick="togglePauseResume()">
+                                Pause
+                            </button>
+
+                            <button class="btn btn-danger"
+                                    onclick="resetTimer()">
+                                Reset
+                            </button>
+
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <!-- goal entry-->
+            <div class="row mt-4 g-4">
+
+                <div class="col-6 col-md-6">
+                    <div class="card bg-dark text-white h-100">
+                        <div class="card-body">
+
+                            <h3 class="text-center mb-3" id="teamAGoalTitle">
+                                Team A Goal Entry
+                            </h3>
+
+                            <input type="text"
+                                id="goalPlayerA"
+                                class="form-control mb-2"
+                                placeholder="Player Number">
+
+                            <button class="btn btn-success w-100"
+                                    onclick="addGoalA()">
+                                Add Goal
+                            </button>
+
+                            <hr>
+
+                            <ul id="teamAGoalList" class="list-group mt-2"></ul>
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-6 col-md-6">
+                    <div class="card bg-dark text-white h-100">
+                        <div class="card-body">
+
+                            <h3 class="text-center mb-3" id="teamBGoalTitle">
+                                Team B Goal Entry
+                            </h3>
+
+                            <input type="text"
+                                id="goalPlayerB"
+                                class="form-control mb-2"
+                                placeholder="Player Number">
+
+                            <button class="btn btn-success w-100"
+                                    onclick="addGoalB()">
+                                Add Goal
+                            </button>
+
+                            <hr>
+
+                            <ul id="teamBGoalList" class="list-group mt-2"></ul>
+
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Foul Entry -->
+
+            <div class="row mt-4 g-4">
+
+                 <!-- Team A Fouls -->
+                <div class="col-6 col-md-6">
+
+                    <div class="card bg-dark text-white h-100">
+
+                        <div class="card-body">
+
+                            <h3 class="text-center mb-3" id="teamAFoulTitle">
+                                Team A Foul Entry
+                            </h3>
+
+                            <input type="text"
+                                class="form-control mb-3"
+                                id="playerNumberA"
+                                placeholder="Player Number">
+
+                            <button class="btn btn-warning w-100"
+                                    onclick="addFoulA()">
+                                Add Team A Foul
+                            </button>
+
+                            <hr>
+
+                            <ul id="teamAFoulList" class="list-group mt-2"></ul>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <!-- Team B Fouls -->
+                <div class="col-6 col-md-6">
+
+                    <div class="card bg-dark text-white h-100">
+
+                        <div class="card-body">
+
+                            <h3 class="text-center mb-3" id="teamBFoulTitle">
+                                Team B Foul Entry
+                            </h3>
+
+                            <input type="text"
+                                class="form-control mb-3"
+                                id="playerNumberB"
+                                placeholder="Player Number">
+
+                            <button class="btn btn-warning w-100"
+                                    onclick="addFoulB()">
+                                Add Team B Foul
+                            </button>
+
+                            <hr>
+
+                            <ul id="teamBFoulList" class="list-group mt-2"></ul>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- Team Fouls -->
+
+            <div class="row mt-4 g-4">
+
+                <div class="col-6">
+
+                    <div class="card bg-dark text-white text-center">
+
+                        <div class="card-body">
+
+                            <h3 id="teamAFoulsTitle">Team A Fouls</h3>
+
+                            <div class="display-4"
+                                id="teamAFouls">
+                                0
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="col-6">
+
+                    <div class="card bg-dark text-white text-center">
+
+                        <div class="card-body">
+
+                            <h3 id="teamBFoulsTitle">Team B Fouls</h3>
+
+                            <div class="display-4"
+                                id="teamBFouls">
+                                0
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- Goal Statistics -->
+
+            <div class="row mt-4 g-4">
+
+                <div class="col-md-6">
+                    <div class="card bg-dark text-white">
+                        <div class="card-body">
+
+                            <h4 id="teamAGoalsTitle">
+                                Team A Goals
+                            </h4>
+
+                            <ul id="teamAGoalStats"></ul>
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="card bg-dark text-white">
+                        <div class="card-body">
+
+                            <h4 id="teamBGoalsTitle">
+                                Team B Goals
+                            </h4>
+
+                            <ul id="teamBGoalStats"></ul>
+
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="row mt-4 g-4">
+                <div class="col-md-6">
+                    <div class="card bg-dark text-white">
+                        <div class="card-body">
+                            <h4 id="teamAPlayersTitle">Team A Fouls</h4>
+                            <ul id="teamAPlayers"></ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="card bg-dark text-white">
+                        <div class="card-body">
+                            <h4 id="teamBPlayersTitle">Team B Fouls</h4>
+                            <ul id="teamBPlayers"></ul>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+        <script src="app.js"></script>
+
+    </body>
+</html>
